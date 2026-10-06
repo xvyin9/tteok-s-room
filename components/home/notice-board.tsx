@@ -15,7 +15,7 @@ export function NoticeBoard({ settings }: { settings: SiteSettings }) {
   });
 
   if (!items.length) {
-    return <p className="text-xs">公告栏还是空的…去管理室贴链接吧。</p>;
+    return <p className="text-xs">链接还是空的。在首页「编辑小窝」里贴。</p>;
   }
 
   return (

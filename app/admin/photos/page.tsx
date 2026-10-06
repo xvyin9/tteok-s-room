@@ -38,7 +38,7 @@ export default async function PhotosAdminPage() {
                 <form
                   className="mt-1"
                   action={async () => {
-                    await deletePhotoAction(photo.id, photo.storage_path);
+                    await deletePhotoAction(photo.id);
                   }}
                 >
                   <button className="btn-3d" type="submit">

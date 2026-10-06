@@ -13,6 +13,13 @@ export const fallbackSettings: SiteSettings = {
   owner_display_name: "tteok",
   bio: "这里是 tteok 的记忆小窝。留言请温柔，照片请慢慢看。",
   mood: "今天想吃年糕 ★",
+  listening: "BGM",
+  eating: "年糕",
+  weather: "晴 ★",
+  location: "memory room",
+  doing: "慢慢翻旧照片",
+  sticker: "喜欢这里 (positive)",
+  useless_note: "guestbook is open\nplease be gentle\nstars : many",
   avatar_url: null,
   instagram_url: "https://instagram.com",
   x_url: "https://x.com",
@@ -22,6 +29,25 @@ export const fallbackSettings: SiteSettings = {
   today_count: 12,
   today_date: new Date().toISOString().slice(0, 10),
   updated_at: new Date().toISOString(),
+  theme: "blue-star",
+  background_mode: "theme",
+  background_image: null,
+  background_color: "#8fd8ff",
+  accent_color: "#ff4f9a",
+  ink_color: "#4a2040",
+  font_family: "rounded",
+  banner_image: null,
+  logo_url: null,
+  sidebar_image: null,
+  welcome_text: "(★▽★) WELCOME!!",
+  home_title: "",
+  nav_home: "HOME",
+  nav_diary: "DIARY",
+  nav_photos: "PHOTOS",
+  nav_notes: "NOTES",
+  nav_guest: "GUEST",
+  show_decorations: true,
+  other_socials: [],
 };
 
 export const fallbackTracks: Track[] = [
@@ -37,6 +63,7 @@ export const fallbackTracks: Track[] = [
 export const fallbackPhotos: Photo[] = [
   {
     id: "demo-window",
+    album_id: null,
     storage_path: "/memories/window.svg",
     caption: "窗边的位子留给晚上",
     created_by: null,
@@ -46,6 +73,7 @@ export const fallbackPhotos: Photo[] = [
   },
   {
     id: "demo-tea",
+    album_id: null,
     storage_path: "/memories/tea.svg",
     caption: "茶，还有一块年糕",
     created_by: null,
@@ -55,6 +83,7 @@ export const fallbackPhotos: Photo[] = [
   },
   {
     id: "demo-diary",
+    album_id: null,
     storage_path: "/memories/diary.svg",
     caption: "日记本还没写满",
     created_by: null,
@@ -67,9 +96,12 @@ export const fallbackPhotos: Photo[] = [
 export const fallbackMoments: MomentPost[] = [
   {
     id: "demo-moment-1",
+    title: "小窝先开一盏灯",
+    summary: "真正的照片之后再贴上来。",
     body: "小窝先开一盏灯。真正的照片之后再贴上来。",
     created_by: null,
     is_hidden: false,
+    published_at: "2008-05-20T12:08:00.000Z",
     created_at: "2008-05-20T12:08:00.000Z",
     images: [
       {
@@ -83,9 +115,12 @@ export const fallbackMoments: MomentPost[] = [
   },
   {
     id: "demo-moment-2",
+    title: "什么都不做的一天",
+    summary: "想把 BGM 开着。",
     body: "今天的心情是：想把 BGM 开着，然后什么都不做。",
     created_by: null,
     is_hidden: false,
+    published_at: "2008-08-01T09:40:00.000Z",
     created_at: "2008-08-01T09:40:00.000Z",
     images: [],
   },

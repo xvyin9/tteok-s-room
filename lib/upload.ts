@@ -1,15 +1,14 @@
 "use client";
 
-import { createBrowserSupabase } from "@/lib/supabase/client";
+import { uploadLocalFile } from "@/lib/actions";
 
 export async function uploadToBucket(bucket: string, file: File) {
-  const supabase = createBrowserSupabase();
-  const safe = file.name.replace(/[^\w.\-]+/g, "_");
-  const path = `${Date.now()}-${safe}`;
-  const { error } = await supabase.storage.from(bucket).upload(path, file, {
-    upsert: false,
-  });
-  if (error) throw new Error(error.message);
-  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-  return { path, publicUrl: data.publicUrl };
+  const formData = new FormData();
+  formData.set("bucket", bucket);
+  formData.set("file", file);
+  const result = await uploadLocalFile(formData);
+  if (result.error || !result.path || !result.publicUrl) {
+    throw new Error(result.error ?? "上传失败");
+  }
+  return { path: result.path, publicUrl: result.publicUrl };
 }

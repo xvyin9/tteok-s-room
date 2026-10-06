@@ -1,16 +1,22 @@
 -- tteok's Memory Room
 -- 在 Supabase SQL Editor 执行本文件。
--- Authentication → 关闭公开注册
--- 创建两个 Auth 用户后，把 uuid 写入 public.users（见文件末尾）
+-- 不需要登录。谁打开网页，谁就能改。
 
 create extension if not exists "pgcrypto";
 
 create table public.users (
-  id uuid primary key references auth.users (id) on delete cascade,
+  id uuid primary key default gen_random_uuid(),
   role text not null check (role in ('owner', 'friend')),
   display_name text not null default 'tteok',
   bio text not null default '这里是 tteok 的记忆小窝。请随便坐。',
   mood text not null default '今天想吃年糕',
+  listening text not null default 'BGM',
+  eating text not null default '年糕',
+  weather text not null default '晴 ★',
+  location text not null default 'memory room',
+  doing text not null default '慢慢翻旧照片',
+  sticker text not null default '喜欢这里 (positive)',
+  useless_note text not null default 'guestbook is open',
   avatar_url text,
   site_title text not null default 'tteok''s Memory Room',
   hit_count bigint not null default 0,
@@ -150,73 +156,53 @@ grant execute on function public.increment_hit_count() to anon, authenticated;
 create policy "users public read" on public.users
   for select using (true);
 
-create policy "staff update users" on public.users
-  for update using (public.is_staff());
+create policy "anyone write users" on public.users
+  for all using (true) with check (true);
 
 create policy "posts public" on public.posts
-  for select using (is_published = true or public.is_staff());
+  for select using (true);
 
-create policy "staff write posts" on public.posts
-  for all using (public.is_staff()) with check (public.is_staff());
+create policy "anyone write posts" on public.posts
+  for all using (true) with check (true);
 
 create policy "photos public" on public.photos
-  for select using (is_hidden = false or public.is_staff());
+  for select using (true);
 
-create policy "staff insert photos" on public.photos
-  for insert with check (public.is_staff());
-
-create policy "staff update photos" on public.photos
-  for update using (public.is_staff());
-
-create policy "staff delete photos" on public.photos
-  for delete using (public.is_staff());
+create policy "anyone write photos" on public.photos
+  for all using (true) with check (true);
 
 create policy "comments public" on public.comments
-  for select using (is_hidden = false or public.is_staff());
+  for select using (true);
 
-create policy "anyone can leave comments" on public.comments
+create policy "anyone insert comments" on public.comments
   for insert with check (
-    parent_id is null
-    and created_by is null
-    and char_length(trim(nickname)) between 1 and 24
+    char_length(trim(nickname)) between 1 and 24
     and char_length(trim(body)) between 1 and 500
   );
 
-create policy "staff can reply comments" on public.comments
-  for insert with check (
-    public.is_staff()
-    and parent_id is not null
-  );
+create policy "anyone update comments" on public.comments
+  for update using (true) with check (true);
 
-create policy "staff update comments" on public.comments
-  for update using (public.is_staff());
-
-create policy "staff delete comments" on public.comments
-  for delete using (public.is_staff());
+create policy "anyone delete comments" on public.comments
+  for delete using (true);
 
 create policy "music public" on public.music
-  for select using (is_active = true or public.is_staff());
+  for select using (true);
 
-create policy "staff write music" on public.music
-  for all using (public.is_staff()) with check (public.is_staff());
+create policy "anyone write music" on public.music
+  for all using (true) with check (true);
 
 create policy "social links public" on public.social_links
   for select using (true);
 
-create policy "staff write social links" on public.social_links
-  for all using (public.is_staff()) with check (public.is_staff());
+create policy "anyone write social links" on public.social_links
+  for all using (true) with check (true);
 
 create policy "moments public" on public.moments
-  for select using (is_hidden = false or public.is_staff());
+  for select using (true);
 
-create policy "staff insert moments" on public.moments
-  for insert with check (public.is_staff());
-
-create policy "staff update moments" on public.moments
-  for update using (public.is_staff());
-
-create policy "staff delete moments" on public.moments
-  for delete using (public.is_staff());
+create policy "anyone write moments" on public.moments
+  for all using (true) with check (true);
 
 insert into storage.buckets (id, name, public)
 values
@@ -230,28 +216,26 @@ create policy "public read memory room files"
 on storage.objects for select
 using (bucket_id in ('avatars', 'photos', 'moment-images', 'article-covers'));
 
-create policy "staff upload memory room files"
+create policy "anyone upload memory room files"
 on storage.objects for insert
 with check (
   bucket_id in ('avatars', 'photos', 'moment-images', 'article-covers')
-  and public.is_staff()
 );
 
-create policy "staff update memory room files"
+create policy "anyone update memory room files"
 on storage.objects for update
 using (
   bucket_id in ('avatars', 'photos', 'moment-images', 'article-covers')
-  and public.is_staff()
 );
 
-create policy "staff delete memory room files"
+create policy "anyone delete memory room files"
 on storage.objects for delete
 using (
   bucket_id in ('avatars', 'photos', 'moment-images', 'article-covers')
-  and public.is_staff()
 );
 
--- 建好两个 Auth 用户后执行（替换 uuid）：
--- insert into public.users (id, role, display_name) values
---   ('OWNER_UUID', 'owner', '你'),
---   ('FRIEND_UUID', 'friend', 'tteok');
+insert into public.users (id, role, display_name)
+values ('00000000-0000-0000-0000-000000000001', 'owner', 'tteok')
+on conflict (id) do nothing;
+
+grant select, insert, update, delete on public.users, public.posts, public.photos, public.comments, public.music, public.social_links, public.moments to anon, authenticated;

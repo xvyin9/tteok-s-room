@@ -3,6 +3,7 @@
 import { saveArticleAction } from "@/lib/actions";
 import { STORAGE_BUCKETS } from "@/lib/config";
 import { uploadToBucket } from "@/lib/upload";
+import { DateFields } from "@/components/edit/date-fields";
 import type { Article } from "@/types/database";
 import { useState } from "react";
 
@@ -28,6 +29,7 @@ export function ArticleForm({ article }: { article?: Article }) {
         正文（Markdown）
         <textarea className="field mt-1 h-48" name="body" defaultValue={article?.body ?? ""} />
       </label>
+      <DateFields value={article?.published_at ?? article?.created_at} label="发布日期和时间" />
       <label className="block text-xs">
         封面
         <input
@@ -43,7 +45,7 @@ export function ArticleForm({ article }: { article?: Article }) {
         />
       </label>
       <label className="text-xs">
-        <input type="checkbox" name="is_published" defaultChecked={article?.is_published} /> 发布到前台
+        <input type="checkbox" name="is_published" defaultChecked={article ? article.is_published : true} /> 发布到前台
       </label>
       <div>
         <button className="btn-3d" type="submit">

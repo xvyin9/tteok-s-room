@@ -3,27 +3,25 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const items = [
-  ["/home", "小窝"],
-  ["/photos", "照片墙"],
-  ["/moments", "动态"],
-  ["/articles", "文章"],
-  ["/guestbook", "留言板"],
-] as const;
-
-export function SiteNav() {
+export function SiteNav({
+  items,
+}: {
+  items: readonly (readonly [string, string])[];
+}) {
   const pathname = usePathname();
   return (
-    <nav className="mb-3 flex flex-wrap gap-1">
-      {items.map(([href, label]) => (
-        <Link
-          key={href}
-          href={href}
-          className={`nav-tab ${pathname === href || pathname.startsWith(`${href}/`) ? "active" : ""}`}
-        >
-          {label}
-        </Link>
-      ))}
+    <nav className="menu-bar">
+      {items.map(([href, label]) => {
+        const active = pathname === href || pathname.startsWith(`${href}/`);
+        return (
+          <Link key={href} href={href} className={active ? "menu-link active" : "menu-link"}>
+            » {label}
+          </Link>
+        );
+      })}
+      <span className="menu-link" aria-hidden="true">
+        »
+      </span>
     </nav>
   );
 }

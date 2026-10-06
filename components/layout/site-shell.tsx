@@ -1,114 +1,153 @@
-import { NoticeBoard } from "@/components/home/notice-board";
 import { SiteNav } from "@/components/layout/site-nav";
 import { MiniPlayer } from "@/components/player/mini-player";
-import { AvatarFrame } from "@/components/skin/avatar-frame";
+import { BannerCharms, SideCharms, YellowDancer } from "@/components/skin/charms";
 import { HitCounter } from "@/components/skin/hit-counter";
-import { Miniroom } from "@/components/skin/miniroom";
 import type { SiteSettings } from "@/types/database";
 import Link from "next/link";
 
 export function SiteShell({
   settings,
   children,
-  right,
-  demo = false,
 }: {
   settings: SiteSettings;
   children: React.ReactNode;
   right?: React.ReactNode;
   demo?: boolean;
 }) {
+  const updated = settings.updated_at.slice(2, 10).replaceAll("-", ".");
+  const title = settings.home_title || settings.site_title;
+  const nav = [
+    ["/home", settings.nav_home],
+    ["/articles", settings.nav_diary],
+    ["/photos", settings.nav_photos],
+    ["/moments", settings.nav_notes],
+    ["/guestbook", settings.nav_guest],
+  ] as const;
+  const sideLinks = [
+    ["/home", "Home"],
+    ["/articles", "Diary Archive"],
+    ["/photos", "Photo Library"],
+    ["/moments", "Little Notes"],
+    ["/guestbook", "Guest Book"],
+  ] as const;
+  const links = [
+    ["Instagram", settings.instagram_url],
+    ["X", settings.x_url],
+    ["TikTok", settings.tiktok_url],
+    ["YouTube", settings.youtube_url],
+    ...settings.other_socials.map((item) => [item.label, item.url] as const),
+  ].filter((item): item is [string, string] => Boolean(item[1]));
+
   return (
-    <div className="mx-auto max-w-5xl px-2 py-3">
-      <header className="hompy-frame mb-3 p-3">
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <div>
-            <p className="pixel text-[10px] text-pink-700">CYWORLD / QZONE / FC2</p>
-            <h1 className="site-title text-3xl md:text-4xl">{settings.site_title}</h1>
-            <p className="text-xs">心情：{settings.mood}</p>
-          </div>
-          <Link href="/" className="btn-3d">
-            离开小窝
-          </Link>
-        </div>
-        <div className="marquee-bar mt-2 overflow-hidden">
-          <p className="marquee-inner">
-            欢迎光临 {settings.site_title} ★ 请把音响打开 ★ 留言请温柔 ★ 2008 forever ★
+    <div className="sky-page">
+      <aside className="side-col">
+        {settings.show_decorations ? <YellowDancer /> : null}
+        {settings.sidebar_image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="sidebar-photo" src={settings.sidebar_image} alt="" />
+        ) : null}
+        <section className="side-box">
+          <h2>SITE INFO</h2>
+          <nav className="side-links">
+            {sideLinks.map(([href, label]) => (
+              <Link key={href} href={href}>
+                {label}
+              </Link>
+            ))}
+          </nav>
+          <HitCounter today={settings.today_count} total={settings.hit_count} />
+          <p className="side-meta">
+            last update : {updated}
+            <br />
+            total visits : {String(settings.hit_count).padStart(4, "0")}
+            <br />★ best viewed with sparkles
           </p>
+        </section>
+        <section className="side-box">
+          <h2>LINKS</h2>
+          <div className="side-body">
+            {links.map(([label, url]) => (
+              <p key={label}>
+                <a href={url} target="_blank" rel="noreferrer">
+                  {label}
+                </a>
+              </p>
+            ))}
+          </div>
+        </section>
+      </aside>
+
+      <div className="blog-frame">
+        <header
+          className={settings.banner_image ? "banner has-banner" : "banner"}
+          style={settings.banner_image ? { backgroundImage: `url("${settings.banner_image}")` } : undefined}
+        >
+          <div className="banner-copy">
+            {settings.logo_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="room-logo" src={settings.logo_url} alt="" />
+            ) : null}
+            <p className="welcome-pill">{settings.welcome_text}</p>
+            <h1 className="banner-title">{title}</h1>
+            <p className="banner-sub">{settings.owner_display_name}</p>
+            <p className="banner-mood">{settings.mood}</p>
+          </div>
+          {settings.show_decorations ? <BannerCharms /> : null}
+        </header>
+
+        <SiteNav items={nav} />
+        <div className="blog-body">{children}</div>
+
+        <div className="blog-dock">
+          <MiniPlayer />
+          <section className="win-note">
+            <div className="win-title">memory.txt — 简介</div>
+            <p className="win-sign whitespace-pre-wrap">{settings.bio}</p>
+            <p className="win-sign">
+              <Link href="/">离开小窝</Link>
+              {" · "}
+              <Link href="/login">tteok 入口</Link>
+            </p>
+          </section>
         </div>
-      </header>
-
-      <SiteNav />
-
-      {demo ? (
-        <p className="setup-ribbon">
-          现在是示范小窝。接上 Supabase 之后，照片、动态、文章和留言会换成你们自己的。
-        </p>
-      ) : null}
-
-      <div className="grid gap-3 md:grid-cols-[220px_minmax(0,1fr)_200px]">
-        <aside>
-          <section className="widget">
-            <div className="widget-title">★ PROFILE</div>
-            <div className="widget-body text-center">
-              <AvatarFrame
-                src={settings.avatar_url}
-                name={settings.owner_display_name}
-              />
-              <h2 className="site-title mt-2 text-xl">{settings.owner_display_name}</h2>
-              <p className="mt-2 text-left text-xs whitespace-pre-wrap">{settings.bio}</p>
-            </div>
-          </section>
-          <section className="widget">
-            <div className="widget-title">♪ BGM</div>
-            <MiniPlayer />
-          </section>
-          <section className="widget">
-            <div className="widget-title">公告栏 NOTICE</div>
-            <div className="widget-body">
-              <NoticeBoard settings={settings} />
-            </div>
-          </section>
-          <section className="widget">
-            <div className="widget-title">COUNTER</div>
-            <div className="widget-body">
-              <HitCounter today={settings.today_count} total={settings.hit_count} />
-            </div>
-          </section>
-        </aside>
-
-        <main className="hompy-frame min-h-[480px] p-3">{children}</main>
-
-        <aside className="hidden md:block">
-          {right ?? (
-            <>
-              <section className="widget">
-                <div className="widget-title">迷你房间</div>
-                <div className="widget-body">
-                  <Miniroom />
-                  <p className="mt-1 text-[11px]">Cyworld 式的小房间。人还没搬进来。</p>
-                </div>
-              </section>
-              <section className="widget">
-                <div className="widget-title">小窝规矩</div>
-                <div className="widget-body text-xs">
-                  <p>1. 随便看</p>
-                  <p>2. 请留言</p>
-                  <p>3. 照片可以点开</p>
-                  <p>4. 管理员在后厨</p>
-                </div>
-              </section>
-            </>
-          )}
-        </aside>
       </div>
 
-      <footer className="mt-3 border-2 border-dashed border-pink-300 bg-white/70 p-2 text-center text-[11px]">
-        <p>{settings.site_title} since 2008.05.20 ※ best viewed with sparkle</p>
-        <p>
-          <Link href="/login">管理室入口</Link>
-        </p>
-      </footer>
+      <aside className="side-col">
+        {settings.show_decorations ? <p className="click-me blink">click me ~ about this room</p> : null}
+        <section className="side-box">
+          <h2>CURRENT STATUS</h2>
+          <ul className="status-list">
+            <li>
+              <span>mood</span> {settings.mood}
+            </li>
+            <li>
+              <span>listening</span> {settings.listening}
+            </li>
+            <li>
+              <span>eating</span> {settings.eating}
+            </li>
+            <li>
+              <span>weather</span> {settings.weather}
+            </li>
+            <li>
+              <span>location</span> {settings.location}
+            </li>
+            <li>
+              <span>doing</span> {settings.doing}
+            </li>
+          </ul>
+        </section>
+        <section className="side-box">
+          <h2>USELESS INFO</h2>
+          <div className="side-body whitespace-pre-wrap">{settings.useless_note}</div>
+        </section>
+        {settings.show_decorations ? <SideCharms /> : null}
+        {settings.avatar_url ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="sidebar-photo" src={settings.avatar_url} alt="" />
+        ) : null}
+        <p className="sticker-field">{settings.sticker}</p>
+      </aside>
     </div>
   );
 }

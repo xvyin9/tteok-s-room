@@ -14,7 +14,8 @@ export function ReplyForm({ parentId }: { parentId: string }) {
         setStatus(result.error ?? "回过了");
       }}
     >
-      <textarea className="field h-16" name="body" placeholder="主人回复…" required />
+      <input className="field" name="nickname" placeholder="你的名字" maxLength={24} required />
+      <textarea className="field mt-1 h-16" name="body" placeholder="回复…" required />
       <button className="btn-3d mt-1" type="submit">
         回复
       </button>

@@ -5,7 +5,7 @@ import { STORAGE_BUCKETS } from "@/lib/config";
 import { uploadToBucket } from "@/lib/upload";
 import { useState } from "react";
 
-export function PhotoUploader() {
+export function PhotoUploader({ albumId }: { albumId?: string }) {
   const [status, setStatus] = useState<string | null>(null);
 
   return (
@@ -23,7 +23,7 @@ export function PhotoUploader() {
         setStatus("上传中…");
         try {
           const { path } = await uploadToBucket(STORAGE_BUCKETS.photos, file);
-          const result = await createPhotoAction(path, caption);
+          const result = await createPhotoAction(path, caption, albumId);
           setStatus(result.error ?? "贴上墙了！");
           form.reset();
         } catch (error) {

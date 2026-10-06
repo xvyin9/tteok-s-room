@@ -7,29 +7,40 @@ export function MiniPlayer() {
   const current = tracks[index];
 
   return (
-    <div className="player-bar widget-body">
-      <div className="pixel mb-1 text-[10px] text-green-800">♪ NOW PLAYING</div>
-      <div className="lcd">
-        {current
-          ? `${String(index + 1).padStart(2, "0")}/${String(tracks.length).padStart(2, "0")} ${current.title}`
-          : "NO TRACK -- 去管理室贴 mp3"}
+    <div className="ipod">
+      <div className="ipod-screen">
+        <div className="ipod-brand">iPod</div>
+        <div className="ipod-track">
+          {current
+            ? `${String(index + 1).padStart(2, "0")}/${String(tracks.length).padStart(2, "0")}  ${current.title}`
+            : "NO TRACK"}
+        </div>
+        <div className="ipod-sub">{playing ? "♪ now playing" : "menu"}</div>
       </div>
-      <div className="flex flex-wrap gap-1">
-        <button type="button" className="btn-3d" onClick={prev}>
-          I&lt;
+      <div className="ipod-wheel">
+        <button type="button" className="wheel-hit wheel-top" onClick={prev} aria-label="上一首">
+          ◀◀
         </button>
-        {playing ? (
-          <button type="button" className="btn-3d" onClick={pause}>
-            暂停
-          </button>
-        ) : (
-          <button type="button" className="btn-3d" onClick={() => play()}>
-            播放
-          </button>
-        )}
-        <button type="button" className="btn-3d" onClick={next}>
-          &gt;I
+        <button type="button" className="wheel-hit wheel-right" aria-label="菜单">
+          MENU
         </button>
+        <button type="button" className="wheel-hit wheel-bottom" onClick={next} aria-label="下一首">
+          ▶▶
+        </button>
+        <button
+          type="button"
+          className="wheel-hit wheel-left"
+          onClick={playing ? pause : () => play()}
+          aria-label={playing ? "暂停" : "播放"}
+        >
+          {playing ? "❚❚" : "▶❚"}
+        </button>
+        <button
+          type="button"
+          className="wheel-center"
+          onClick={playing ? pause : () => play()}
+          aria-label={playing ? "暂停" : "播放"}
+        />
       </div>
     </div>
   );

@@ -1,26 +1,35 @@
-import { PhotoLightbox } from "@/components/photos/photo-lightbox";
-import { getPhotos } from "@/lib/queries";
+import { getAlbums } from "@/lib/queries";
 import Link from "next/link";
 
+function stamp(value: string) {
+  return new Date(value).toLocaleDateString("zh-TW");
+}
+
 export default async function PhotosPage() {
-  const photos = await getPhotos();
+  const albums = await getAlbums();
   return (
     <div>
-      <h2 className="site-title text-2xl">照片墙</h2>
-      <p className="mb-3 text-xs">点开可以放大。像以前贴在桌面的拍立得。</p>
-      {photos.length ? (
-        <div className="photo-wall grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {photos.map((photo) => (
-            <div className="photo-tile" key={photo.id}>
-              <PhotoLightbox src={photo.public_url} caption={photo.caption} />
-              <Link href={`/photos/${photo.id}`} className="mt-1 block text-[11px]">
-                {photo.caption || "没有说明"} · 单独打开
-              </Link>
-            </div>
+      <h2 className="site-title text-2xl">相册</h2>
+      <p className="mb-3 text-xs">一本一本慢慢翻。</p>
+      {albums.length ? (
+        <div className="album-grid">
+          {albums.map((album) => (
+            <Link className="album-card" href={`/photos/albums/${album.id}`} key={album.id}>
+              {album.cover_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img className="album-cover" src={album.cover_url} alt="" />
+              ) : (
+                <div className="album-cover album-empty">还没有封面</div>
+              )}
+              <strong>{album.name}</strong>
+              <span>
+                {album.photo_count} 张 · {stamp(album.created_at)}
+              </span>
+            </Link>
           ))}
         </div>
       ) : (
-        <p>还没有照片。等主人上线贴图。</p>
+        <p>还没有相册。</p>
       )}
     </div>
   );

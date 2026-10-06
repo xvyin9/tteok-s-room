@@ -40,3 +40,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# room content written by the site
+/data/room.json
+/data/room.json.tmp
+/data/room.db
+/data/room.db-*
+/public/uploads/

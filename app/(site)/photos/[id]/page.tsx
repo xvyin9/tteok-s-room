@@ -18,7 +18,7 @@ export default async function PhotoPage({
       <div className="photo-tile inline-block">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={photo.public_url} alt={photo.caption} className="max-h-[70vh]" />
-        <p className="mt-2 text-sm">{photo.caption}</p>
+        <p className="mt-1 text-sm">{photo.caption}</p>
       </div>
     </div>
   );
