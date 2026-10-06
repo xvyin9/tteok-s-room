@@ -22,11 +22,12 @@ import type {
 } from "@/types/database";
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 import { randomUUID } from "crypto";
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { DatabaseSync } from "node:sqlite";
+import { tmpdir } from "os";
 import path from "path";
 
-const dbPath = path.join(process.cwd(), "data", "room.db");
+const bundledDbPath = path.join(process.cwd(), "data", "room.db");
 const legacyPath = path.join(process.cwd(), "data", "room.json");
 
 let database: DatabaseSync | null = null;
@@ -77,10 +78,27 @@ const settingColumns = [
   "show_decorations",
 ] as const;
 
+function openDatabase() {
+  if (!process.env.VERCEL) {
+    mkdirSync(path.dirname(bundledDbPath), { recursive: true });
+    return new DatabaseSync(bundledDbPath);
+  }
+
+  // The deployed file is read-only. Writes there throw
+  // "attempt to write a readonly database" and the edit page becomes a 500.
+  const runtimePath = path.join(tmpdir(), "tteok-room.db");
+  if (!existsSync(runtimePath) && existsSync(bundledDbPath)) {
+    const source = new DatabaseSync(bundledDbPath, { readOnly: true });
+    const snapshot = source.serialize();
+    source.close();
+    writeFileSync(runtimePath, snapshot);
+  }
+  return new DatabaseSync(runtimePath);
+}
+
 export function db() {
   if (!database) {
-    mkdirSync(path.dirname(dbPath), { recursive: true });
-    database = new DatabaseSync(dbPath);
+    database = openDatabase();
     database.exec("pragma journal_mode = wal");
     database.exec("pragma foreign_keys = on");
     migrate(database);

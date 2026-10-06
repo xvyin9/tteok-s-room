@@ -60,7 +60,7 @@ async function ownerOnly() {
 
 export async function incrementHits() {
   const counts = bumpHits();
-  revalidateSite();
+  if (!process.env.VERCEL) revalidateSite();
   return counts;
 }
 
@@ -97,33 +97,37 @@ export async function uploadLocalFile(
 export async function saveSettingsAction(formData: FormData) {
   const denied = await ownerOnly();
   if (denied) return denied;
-  patchSettings({
-    site_title: String(formData.get("site_title") ?? "").trim() || "tteok's Memory Room",
-    owner_display_name: String(formData.get("owner_display_name") ?? "").trim() || "tteok",
-    bio: String(formData.get("bio") ?? ""),
-    mood: String(formData.get("mood") ?? ""),
-    listening: String(formData.get("listening") ?? ""),
-    eating: String(formData.get("eating") ?? ""),
-    weather: String(formData.get("weather") ?? ""),
-    location: String(formData.get("location") ?? ""),
-    doing: String(formData.get("doing") ?? ""),
-    sticker: String(formData.get("sticker") ?? ""),
-    useless_note: String(formData.get("useless_note") ?? ""),
-    avatar_url: emptyToNull(formData.get("avatar_url")),
-    instagram_url: emptyToNull(formData.get("instagram_url")),
-    x_url: emptyToNull(formData.get("x_url")),
-    tiktok_url: emptyToNull(formData.get("tiktok_url")),
-    youtube_url: emptyToNull(formData.get("youtube_url")),
-  });
-  const nextPassword = String(formData.get("next_password") ?? "");
-  const currentPassword = String(formData.get("current_password") ?? "");
-  if (nextPassword) {
-    if (nextPassword.length < 4) return { error: "新密码至少 4 位" };
-    if (!checkPassword(currentPassword)) return { error: "现在的密码不对，其他资料已经保存" };
-    setPassword(nextPassword);
+  try {
+    patchSettings({
+      site_title: String(formData.get("site_title") ?? "").trim() || "tteok's Memory Room",
+      owner_display_name: String(formData.get("owner_display_name") ?? "").trim() || "tteok",
+      bio: String(formData.get("bio") ?? ""),
+      mood: String(formData.get("mood") ?? ""),
+      listening: String(formData.get("listening") ?? ""),
+      eating: String(formData.get("eating") ?? ""),
+      weather: String(formData.get("weather") ?? ""),
+      location: String(formData.get("location") ?? ""),
+      doing: String(formData.get("doing") ?? ""),
+      sticker: String(formData.get("sticker") ?? ""),
+      useless_note: String(formData.get("useless_note") ?? ""),
+      avatar_url: emptyToNull(formData.get("avatar_url")),
+      instagram_url: emptyToNull(formData.get("instagram_url")),
+      x_url: emptyToNull(formData.get("x_url")),
+      tiktok_url: emptyToNull(formData.get("tiktok_url")),
+      youtube_url: emptyToNull(formData.get("youtube_url")),
+    });
+    const nextPassword = String(formData.get("next_password") ?? "");
+    const currentPassword = String(formData.get("current_password") ?? "");
+    if (nextPassword) {
+      if (nextPassword.length < 4) return { error: "新密码至少 4 位" };
+      if (!checkPassword(currentPassword)) return { error: "现在的密码不对，其他资料已经保存" };
+      setPassword(nextPassword);
+    }
+    revalidateSite();
+    return { error: undefined };
+  } catch (error) {
+    return { error: error instanceof Error ? error.message : "保存失败" };
   }
-  revalidateSite();
-  return { error: undefined };
 }
 
 export async function saveSocialsAction(formData: FormData): Promise<void> {
