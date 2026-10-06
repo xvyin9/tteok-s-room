@@ -1,0 +1,141 @@
+import type {
+  Article,
+  GuestbookMessage,
+  MomentPost,
+  Photo,
+  SiteSettings,
+  Track,
+} from "@/types/database";
+
+export const fallbackSettings: SiteSettings = {
+  id: "fallback",
+  site_title: "tteok's Memory Room",
+  owner_display_name: "tteok",
+  bio: "这里是 tteok 的记忆小窝。留言请温柔，照片请慢慢看。",
+  mood: "今天想吃年糕 ★",
+  avatar_url: null,
+  instagram_url: "https://instagram.com",
+  x_url: "https://x.com",
+  tiktok_url: "https://tiktok.com",
+  youtube_url: "https://youtube.com",
+  hit_count: 1288,
+  today_count: 12,
+  today_date: new Date().toISOString().slice(0, 10),
+  updated_at: new Date().toISOString(),
+};
+
+export const fallbackTracks: Track[] = [
+  {
+    id: "demo-1",
+    title: "请在后台贴上 mp3 外链",
+    external_url: "",
+    sort_order: 0,
+    is_active: false,
+  },
+];
+
+export const fallbackPhotos: Photo[] = [
+  {
+    id: "demo-window",
+    storage_path: "/memories/window.svg",
+    caption: "窗边的位子留给晚上",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-05-20T10:00:00.000Z",
+    public_url: "/memories/window.svg",
+  },
+  {
+    id: "demo-tea",
+    storage_path: "/memories/tea.svg",
+    caption: "茶，还有一块年糕",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-06-02T08:30:00.000Z",
+    public_url: "/memories/tea.svg",
+  },
+  {
+    id: "demo-diary",
+    storage_path: "/memories/diary.svg",
+    caption: "日记本还没写满",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-07-14T15:12:00.000Z",
+    public_url: "/memories/diary.svg",
+  },
+];
+
+export const fallbackMoments: MomentPost[] = [
+  {
+    id: "demo-moment-1",
+    body: "小窝先开一盏灯。真正的照片之后再贴上来。",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-05-20T12:08:00.000Z",
+    images: [
+      {
+        id: "demo-moment-1-img",
+        moment_id: "demo-moment-1",
+        storage_path: "/memories/window.svg",
+        sort_order: 0,
+        public_url: "/memories/window.svg",
+      },
+    ],
+  },
+  {
+    id: "demo-moment-2",
+    body: "今天的心情是：想把 BGM 开着，然后什么都不做。",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-08-01T09:40:00.000Z",
+    images: [],
+  },
+];
+
+export const fallbackArticles: Article[] = [
+  {
+    id: "demo-article-1",
+    title: "小窝开张的那天",
+    slug: "opening-day",
+    body: "这间房间先用插画占着位子。\n\n等你把自己的照片、说说和日记放进来，示范的这些就会被换掉。留言板已经开着，路过的人可以写下名字。\n\n把音响打开。2008 年的夏天还在。",
+    cover_path: "/memories/diary.svg",
+    cover_url: "/memories/diary.svg",
+    is_published: true,
+    published_at: "2008-05-20T18:00:00.000Z",
+    created_by: null,
+    created_at: "2008-05-20T18:00:00.000Z",
+  },
+];
+
+export const fallbackGuestbook: GuestbookMessage[] = [
+  {
+    id: "demo-gb-1",
+    parent_id: null,
+    nickname: "路过的星星",
+    body: "房间好亮。我先坐一下。",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-05-21T03:12:00.000Z",
+    replies: [
+      {
+        id: "demo-gb-1-reply",
+        parent_id: "demo-gb-1",
+        nickname: "tteok",
+        body: "欢迎光临。点心在桌上，歌还没放进去。",
+        created_by: null,
+        is_hidden: false,
+        created_at: "2008-05-21T04:02:00.000Z",
+        replies: [],
+      },
+    ],
+  },
+  {
+    id: "demo-gb-2",
+    parent_id: null,
+    nickname: "旧书签",
+    body: "计数器还在跳，像以前的个人站。",
+    created_by: null,
+    is_hidden: false,
+    created_at: "2008-06-18T11:20:00.000Z",
+    replies: [],
+  },
+];

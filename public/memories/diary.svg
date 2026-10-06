@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" role="img" aria-label="å°,">
+  <rect width="320" height="240" fill="#d8f8e4"/>
+  <rect x="46" y="28" width="110" height="170" fill="#fffef8" stroke="#8d6a4a" stroke-width="4"/>
+  <rect x="164" y="28" width="110" height="170" fill="#fff7fb" stroke="#8d6a4a" stroke-width="4"/>
+  <rect x="152" y="28" width="16" height="170" fill="#c9845a"/>
+  <path d="M64 70 h76 M64 90 h70 M64 110 h74 M64 130 h60" stroke="#e7b8c8" stroke-width="3"/>
+  <path d="M182 78 h74 M182 98 h66 M182 118 h70" stroke="#ffb6d9" stroke-width="3"/>
+  <path d="M230 150 l8 8 16-18" fill="none" stroke="#ff5fa2" stroke-width="4" stroke-linecap="round"/>
+  <text x="160" y="224" text-anchor="middle" font-size="14" fill="#4a2040" font-family="Trebuchet MS, sans-serif">diary</text>
+</svg>
