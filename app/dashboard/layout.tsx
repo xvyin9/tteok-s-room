@@ -1,7 +1,4 @@
-import { logoutAction } from "@/lib/actions";
-import { isOwner } from "@/lib/owner";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 const links = [
   ["/dashboard", "总览"],
@@ -15,8 +12,7 @@ const links = [
   ["/dashboard/appearance", "Appearance"],
 ] as const;
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  if (!(await isOwner())) redirect("/login");
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="dash">
       <p className="mb-2 text-xs">
@@ -29,11 +25,6 @@ export default async function DashboardLayout({ children }: { children: React.Re
             {label}
           </Link>
         ))}
-        <form action={logoutAction}>
-          <button className="btn-3d" type="submit">
-            退出
-          </button>
-        </form>
       </nav>
       {children}
     </div>

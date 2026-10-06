@@ -106,7 +106,7 @@ export function SiteShell({
             <p className="win-sign">
               <Link href="/">离开小窝</Link>
               {" · "}
-              <Link href="/login">tteok 入口</Link>
+              <Link href="/dashboard">编辑主页</Link>
             </p>
           </section>
         </div>

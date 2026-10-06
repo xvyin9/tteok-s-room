@@ -52,8 +52,6 @@ export function ProfileForm({ settings }: { settings: SiteSettings }) {
         <Field name="doing" label="在做" defaultValue={settings.doing} />
         <Field name="sticker" label="贴纸" defaultValue={settings.sticker} />
         <Field name="useless_note" label="无用信息" defaultValue={settings.useless_note} multiline />
-        <Field name="current_password" label="现在的密码（改密码时才填）" type="password" />
-        <Field name="next_password" label="新密码" type="password" />
         <button className="btn-3d" type="submit">
           保存资料
         </button>

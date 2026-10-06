@@ -1,4 +1,3 @@
-import { isOwner } from "@/lib/owner";
 import { getArticles } from "@/lib/queries";
 import { redirect } from "next/navigation";
 
@@ -8,7 +7,6 @@ export default async function EditArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  if (!(await isOwner())) redirect("/login");
   const articles = await getArticles(true);
   const article = articles.find((item) => item.slug === slug);
   if (!article) redirect("/dashboard/articles");
