@@ -17,20 +17,12 @@ export default async function MomentsAdminPage() {
             </p>
             <p className="whitespace-pre-wrap text-sm">{moment.body}</p>
             <div className="mt-2 flex gap-1">
-              <form
-                action={async () => {
-                  await toggleMomentHiddenAction(moment.id, !moment.is_hidden);
-                }}
-              >
+              <form action={toggleMomentHiddenAction.bind(null, moment.id, !moment.is_hidden)}>
                 <button className="btn-3d" type="submit">
                   {moment.is_hidden ? "显示" : "隐藏"}
                 </button>
               </form>
-              <form
-                action={async () => {
-                  await deleteMomentAction(moment.id);
-                }}
-              >
+              <form action={deleteMomentAction.bind(null, moment.id)}>
                 <button className="btn-3d" type="submit">
                   删除
                 </button>

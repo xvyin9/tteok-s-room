@@ -9,12 +9,7 @@ export default async function MusicAdminPage() {
       <p className="mb-3 text-xs">
         贴可以直接播放的 mp3 / audio URL（例如自己的网盘直链）。请注意版权。
       </p>
-      <form
-        className="widget"
-        action={async (formData) => {
-          await saveTrackAction(formData);
-        }}
-      >
+      <form className="widget" action={saveTrackAction}>
         <div className="widget-title">加一首</div>
         <div className="widget-body space-y-2">
           <input className="field" name="title" placeholder="歌名" required />
@@ -47,11 +42,7 @@ export default async function MusicAdminPage() {
               </td>
               <td className="break-all text-[11px]">{track.external_url}</td>
               <td>
-                <form
-                  action={async () => {
-                    await deleteTrackAction(track.id);
-                  }}
-                >
+                <form action={deleteTrackAction.bind(null, track.id)}>
                   <button className="btn-3d" type="submit">
                     删除
                   </button>

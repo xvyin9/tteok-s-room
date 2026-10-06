@@ -250,11 +250,9 @@ export async function assignAlbumAction(formData: FormData) {
 }
 
 export async function togglePhotoHiddenAction(id: string, isHidden: boolean) {
-  const denied = await ownerOnly();
-  if (denied) return denied;
+  if (!(await isOwner())) return;
   updatePhoto(id, { is_hidden: isHidden });
   revalidateSite();
-  return { error: undefined };
 }
 
 export async function deletePhotoAction(id: string) {
@@ -308,11 +306,9 @@ export async function saveMomentAction(formData: FormData) {
 }
 
 export async function toggleMomentHiddenAction(id: string, isHidden: boolean) {
-  const denied = await ownerOnly();
-  if (denied) return denied;
+  if (!(await isOwner())) return;
   updateMoment(id, { is_hidden: isHidden });
   revalidateSite();
-  return { error: undefined };
 }
 
 export async function deleteMomentAction(id: string) {
@@ -399,11 +395,9 @@ export async function replyGuestbookAction(formData: FormData) {
 }
 
 export async function hideGuestbookAction(id: string, isHidden: boolean) {
-  const denied = await ownerOnly();
-  if (denied) return denied;
+  if (!(await isOwner())) return;
   hideComment(id, isHidden);
   revalidateSite();
-  return { error: undefined };
 }
 
 export async function deleteGuestbookAction(id: string) {

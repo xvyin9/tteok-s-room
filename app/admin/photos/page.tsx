@@ -26,21 +26,12 @@ export default async function PhotosAdminPage() {
               </td>
               <td>{photo.caption}</td>
               <td>
-                <form
-                  action={async () => {
-                    await togglePhotoHiddenAction(photo.id, !photo.is_hidden);
-                  }}
-                >
+                <form action={togglePhotoHiddenAction.bind(null, photo.id, !photo.is_hidden)}>
                   <button className="btn-3d" type="submit">
                     {photo.is_hidden ? "显示" : "隐藏"}
                   </button>
                 </form>
-                <form
-                  className="mt-1"
-                  action={async () => {
-                    await deletePhotoAction(photo.id);
-                  }}
-                >
+                <form className="mt-1" action={deletePhotoAction.bind(null, photo.id)}>
                   <button className="btn-3d" type="submit">
                     删除
                   </button>

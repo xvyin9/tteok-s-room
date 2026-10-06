@@ -24,12 +24,7 @@ export default async function GuestbookAdminPage() {
             </div>
           ))}
           <ReplyForm parentId={msg.id} />
-          <form
-            className="mt-1"
-            action={async () => {
-              await hideGuestbookAction(msg.id, !msg.is_hidden);
-            }}
-          >
+          <form className="mt-1" action={hideGuestbookAction.bind(null, msg.id, !msg.is_hidden)}>
             <button className="btn-3d" type="submit">
               {msg.is_hidden ? "显示" : "隐藏"}
             </button>

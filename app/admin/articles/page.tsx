@@ -28,12 +28,7 @@ export default async function ArticlesAdminPage() {
                 <Link className="btn-3d" href={`/admin/articles/${article.id}`}>
                   修改
                 </Link>
-                <form
-                  className="mt-1"
-                  action={async () => {
-                    await deleteArticleAction(article.id);
-                  }}
-                >
+                <form className="mt-1" action={deleteArticleAction.bind(null, article.id)}>
                   <button className="btn-3d" type="submit">
                     删除
                   </button>
